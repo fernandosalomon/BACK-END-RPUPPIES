@@ -1,6 +1,5 @@
 const { Schema, model } = require('mongoose');
 
-// Helper function to validate date range
 const dateValidator = (value) => {
     const minDate = new Date('1900-01-01');
     const maxDate = new Date();
@@ -21,6 +20,10 @@ const MascotaSchema = new Schema({
             validator: dateValidator,
             message: 'La fecha de nacimiento debe ser mayor a 01-01-1900 y menor o igual a la fecha actual.'
         }
+    },
+    sexo: {
+        type: Boolean,
+        required: true
     },
     especie: {
         type: String,

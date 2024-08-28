@@ -28,9 +28,9 @@ const obtenerMascotaPorID = async (idMascota) => {
 }
 
 const crear = async (body) => {
-    const { nombre, especie } = body;
+    const { nombre, fechaDeNacimiento, sexo, especie, raza, colorDePelo, pesoKg, esterilizado, domicilio, observaciones} = body;
 
-    if (nombre && especie) {
+    if (nombre && fechaDeNacimiento && sexo && especie && raza && colorDePelo && pesoKg && esterilizado && domicilio && observaciones) {
         const nuevaMascota = new MascotaModel(body);
         nuevaMascota.save();
         return nuevaMascota;
@@ -48,10 +48,19 @@ const actualizar = async (idMascota, body) => {
         };
     }
 
-    const { nombre, especie } = body;
+    const { nombre, fechaDeNacimiento, sexo, especie, raza, colorDePelo, pesoKg, esterilizado, domicilio, observaciones} = body;
     const camposPermitidos = {};
     if (nombre) camposPermitidos.nombre = nombre;
+    if (fechaDeNacimiento) camposPermitidos.fechaDeNacimiento = fechaDeNacimiento;
+    if (sexo) camposPermitidos.sexo = sexo;
     if (especie) camposPermitidos.especie = especie;
+    if (raza) camposPermitidos.raza = raza;
+    if (colorDePelo) camposPermitidos.colorDePelo = colorDePelo;
+    if (pesoKg) camposPermitidos.pesoKg = pesoKg;
+    if (esterilizado) camposPermitidos.esterilizado = esterilizado;
+    if (domicilio) camposPermitidos.domicilio = domicilio;
+    if (observaciones) camposPermitidos.observaciones = observaciones;
+
 
     if (Object.keys(camposPermitidos).length > 0) {
         const mascotaActualizada = await MascotaModel.findByIdAndUpdate(
