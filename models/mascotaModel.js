@@ -22,8 +22,10 @@ const MascotaSchema = new Schema({
         }
     },
     sexo: {
-        type: Boolean,
-        required: true
+        type: String,
+        required: true,
+        minlength: 3,
+        maxlength: 100
     },
     especie: {
         type: String,
