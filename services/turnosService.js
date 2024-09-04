@@ -24,7 +24,7 @@ const obtenerUnTurno = async (idTurno) => {
     return turno;
 }
 
-const agregarTurno = async (body) => {
+const agregar = async (body) => {
     const {fecha, hora, mascota, veterinario, detalles} = body;
     if(fecha && hora && mascota && veterinario && detalles){
         const nuevoTurno = new TurnoModel (body)
@@ -37,7 +37,7 @@ const agregarTurno = async (body) => {
     }   
 }
 
-const editarTruno = async (idTurno, body) => {
+const editar = async (idTurno, body) => {
     if (!idTurno) {
         return{
         mensajeError: "Turno inexistente"
@@ -72,7 +72,7 @@ const editarTruno = async (idTurno, body) => {
 
 }
 
-const eliminarTurno = async (idTurno) => {
+const eliminar = async (idTurno) => {
     if (!idTurno) {
         return {
             mensajeError: "ID Incorrecto"
@@ -96,7 +96,7 @@ const eliminarTurno = async (idTurno) => {
 module.exports ={
     obtenerTurnos,
     obtenerUnTurno,
-    agregarTurno,
-    editarTruno,
-    eliminarTurno
+    agregar,
+    editar,
+    eliminar
 }
