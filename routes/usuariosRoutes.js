@@ -1,11 +1,20 @@
-const {Router} = require(`express`);
-const { registroUsuario, loginUsuario, obtenerTodosLosUsuarios, obtenerUsuario, actualizarUsuario, eliminarUsuario } = require("../controllers/usuariosController");
+const { Router } = require(`express`);
+const {
+  registroUsuario,
+  loginUsuario,
+  obtenerTodosLosUsuarios,
+  obtenerUsuario,
+  actualizarUsuario,
+  eliminarUsuario,
+} = require("../controllers/usuariosController");
 
 const router = Router();
 
 router.post(`/`, registroUsuario);
 
 router.post(`/login`, loginUsuario);
+
+router.post("/recuperar-contraseña/:token");
 
 router.get(`/`, obtenerTodosLosUsuarios);
 
