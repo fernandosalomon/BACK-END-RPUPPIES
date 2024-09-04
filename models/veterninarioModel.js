@@ -1,18 +1,28 @@
 const { Schema, model } = require('mongoose');
 
-const VeterinarioModel = new Schema({
+const VeterinarioSchema = new Schema({
     nombre:{
         type: String,
-        require: true
+        required: true,
+        maxlength: 30
     },
     mail:{
         type: String,
-        require: true,
+        required: true,
         unique: true,
         match: [/.+@.+\..+/, 'Por favor ingresa un email válido'],
+        maxlength: 50,
     },
     telefono:{
         type: Number,
-        unique: true
+        unique: true,
+        maxlength: 20
+    },
+    direccion:{
+        type: String,
+        maxlength: 100
     }
 })
+
+const VeterinarioModel = model('Veterinarios', VeterinarioSchema)
+module.exports = VeterinarioModel

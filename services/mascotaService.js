@@ -66,7 +66,7 @@ const actualizar = async (idMascota, body) => {
         const mascotaActualizada = await MascotaModel.findByIdAndUpdate(
             {_id: idMascota},
             body,
-            {new: true}
+            {new : true}
         );
         if (!mascotaActualizada) {
             return {

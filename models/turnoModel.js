@@ -5,7 +5,7 @@ const { Schema, model } = require('mongoose');
 const TurnoSchema = new Schema({
     fecha:{
         type: Date,
-        require: true,
+        required: true,
         validate: {
             validate: {
                 validator: function(v) {
@@ -27,12 +27,12 @@ const TurnoSchema = new Schema({
     mascota:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Mascotas',
-        require: true
+        required: true
     },
     veterinario:{
         type: mongoose.Schema.Types.ObjectId,
         ref:'Veterinarios',
-        require: true
+        required: true
     },
     detalles:{
         type: String,
