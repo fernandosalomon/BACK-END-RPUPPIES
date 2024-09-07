@@ -1,18 +1,17 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, mongoose } = require('mongoose');
+
 
 
 
 const TurnoSchema = new Schema({
     fecha:{
-        type: Date,
+        type: String,
         required: true,
         validate: {
-            validate: {
-                validator: function(v) {
-                    return validarDiaLaboral(v);
-                },
-                message: props => `La fecha seleccionada (${props.value.toDateString()}) no es un día laboral (Lunes a Viernes)!`
-            }
+            validator: function(v) {
+                return validarDiaLaboral(v);
+            },
+            message: props => `La fecha seleccionada (${props.value}) no es un día laboral (Lunes a Viernes)!`
         }
     },
     hora: {
@@ -21,18 +20,18 @@ const TurnoSchema = new Schema({
         validate:{
             validator: function(v){
                 return validarHora(v);
-            }, message: props => `El horario indicado (${props.value.toISOString().slice(11, 16)}) no corresponde al horario laboral (10:00 hs a 18:00 hs)`
+            }, message: props => `El horario indicado (${props.value}) no corresponde al horario laboral (10:00 hs a 18:00 hs)`
         }
     },
     mascota:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,//mongoose.Schema.Types.ObjectId,
         ref: 'Mascotas',
-        required: true
+        //required: true
     },
     veterinario:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,//mongoose.Schema.Types.ObjectId,
         ref:'Veterinarios',
-        required: true
+       // required: true
     },
     detalles:{
         type: String,
@@ -40,20 +39,27 @@ const TurnoSchema = new Schema({
     }
 }) 
 
-function validarHora(fecha) {
-    const hora = fecha.getUTCHours();
-    const minutos = fecha.getUTCMinutes(); 
+function validarHora(hora) {
+    // Esperamos que el formato de hora sea "HH:MM"
+    const [horas, minutos] = hora.split(':').map(Number);
 
-    const totalMinutos = hora * 60 + minutos;
+    if (isNaN(horas) || isNaN(minutos)) {
+        return false; // Formato inválido
+    }
 
-    const horarioApertura = 10 * 60;
-    const horarioCierre = 18 * 60;
+    const totalMinutos = horas * 60 + minutos;
+    const horarioApertura = 10 * 60; // 10:00 AM en minutos
+    const horarioCierre = 18 * 60;   // 6:00 PM en minutos
+
     return totalMinutos >= horarioApertura && totalMinutos <= horarioCierre;
 }
 
 function validarDiaLaboral(fecha) {
-    const diaSemana = fecha.getUTCDay();
-    return diaSemana >= 1 && diaSemana <= 5;
+    const [anio, mes, dia] = fecha.split('-').map(Number);
+    const fechaObj = new Date(anio, mes - 1, dia); // Mes se indexa desde 0
+
+    const diaSemana = fechaObj.getUTCDay(); // 0 = Domingo, 6 = Sábado
+    return diaSemana >= 1 && diaSemana <= 5; // Lunes a Viernes
 }
 
 const TurnoModel = model('Turnos', TurnoSchema)

@@ -4,7 +4,7 @@ const obtenerTodosLosTurnos = async (req, res) => {
     const resultado = await servicioTurnos.obtenerTurnos();
     if (resultado.mensajeError) {
         res.status(404).json({ mensaje: resultado.mensajeError });
-    } else {
+      } else {
         res.status(200).json(resultado);
     }
 }

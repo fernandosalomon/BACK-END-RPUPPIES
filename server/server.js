@@ -18,6 +18,7 @@ class Server{
     rutas(){
         this.app.use("/api/mascotas", require(`../routes/mascotasRoutes`));
         this.app.use(`/api/usuarios`, require(`../routes/usuariosRoutes`));
+        this.app.use(`/api/turnos`, require(`../routes/turnosRoutes`));
     }
 
     listen(){

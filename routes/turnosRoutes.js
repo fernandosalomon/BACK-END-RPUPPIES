@@ -8,8 +8,8 @@ router.get("/:idTurno", obtenerTurno);
 
 router.post("/", agregarTurno);
 
-router.put("/", editarTurno);
+router.put("/:idTurno", editarTurno);
 
-router.delete("/", eliminarTurno);
+router.delete("/:idTurno", eliminarTurno);
 
 module.exports = router;

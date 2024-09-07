@@ -1,12 +1,14 @@
 const TurnoModel = require('../models/turnoModel')
+const {mongoose} =require ('mongoose')
 
 const obtenerTurnos = async () => {
     const turnos = await TurnoModel.find();
-    if(!turnos){
+    if(turnos.length === 0){
         return{
             mensajeError: "No hay Turnos que mostrar"
         };
     }
+    return turnos
 }
 
 const obtenerUnTurno = async (idTurno) => {
@@ -39,38 +41,49 @@ const agregar = async (body) => {
 
 const editar = async (idTurno, body) => {
     if (!idTurno) {
-        return{
-        mensajeError: "Turno inexistente"
-        }
+        return {
+            mensajeError: "ID de Turno no proporcionado"
+        };
     }
 
-    const {fecha, hora, mascota, veterinario, detalles} = body;
-    const turnoEditado = {}
+    if (!mongoose.Types.ObjectId.isValid(idTurno)) {
+        return {
+            mensajeError: "ID inválido"
+        };
+    }
+
+    // Verificar si el turno existe
+    const turnoExistente = await TurnoModel.findById(idTurno);
+    if (!turnoExistente) {
+        return {
+            mensajeError: "Turno no encontrado"
+        };
+    }
+
+    // Actualizamos los campos que vienen en body
+    const { fecha, hora, mascota, veterinario, detalles } = body;
+    const turnoEditado = {};
+    
     if (fecha) turnoEditado.fecha = fecha;
     if (hora) turnoEditado.hora = hora;
     if (mascota) turnoEditado.mascota = mascota;
     if (veterinario) turnoEditado.veterinario = veterinario;
-    if (detalles) turnoEditado.detalles = detalles
+    if (detalles) turnoEditado.detalles = detalles;
 
     if (Object.keys(turnoEditado).length > 0) {
         const turnoTerminado = await TurnoModel.findByIdAndUpdate(
-            {_id: idTurno},
-            body,
-            {new : true}
+            idTurno,
+            turnoEditado,
+            { new: true }
         );
-        if (!turnoTerminado) {
-            return {
-                mensajeError: "Turno no encontrado"
-            };
-        }
+        
         return turnoTerminado;
     } else {
         return {
-            mensajeError: "Error al actualizar Turno"
+            mensajeError: "No hay campos para actualizar"
         };
     }
-
-}
+};
 
 const eliminar = async (idTurno) => {
     if (!idTurno) {
@@ -83,13 +96,13 @@ const eliminar = async (idTurno) => {
 
     if (!turnoEliminado) {
         return {
-            mensajeError: "Mascota no encontrada"
+            mensajeError: "Turno no encontrado"
         };
     }
 
     return {
-        mensaje: "Mascota eliminada con éxito",
-        mascotaEliminada
+        mensaje: "Turno eliminado con éxito!",
+        turnoEliminado
     };
 }
 
