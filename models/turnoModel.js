@@ -12,7 +12,8 @@ const TurnoSchema = new Schema({
                 return validarDiaLaboral(v);
             },
             message: props => `La fecha seleccionada (${props.value}) no es un día laboral (Lunes a Viernes)!`
-        }
+        },
+        match: [/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,'Ingrese un formato de fecha valido']
     },
     hora: {
         type: String,
@@ -21,12 +22,13 @@ const TurnoSchema = new Schema({
             validator: function(v){
                 return validarHora(v);
             }, message: props => `El horario indicado (${props.value}) no corresponde al horario laboral (10:00 hs a 18:00 hs)`
-        }
+        },
+        match: [/^([01]\d|2[0-3]):([0-5]\d)$/,'Ingrese un formato de hora valido']
     },
     mascota:{
-        type: String,//mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Mascotas',
-        //required: true
+        required: true
     },
     veterinario:{
         type: String,//mongoose.Schema.Types.ObjectId,
@@ -40,26 +42,26 @@ const TurnoSchema = new Schema({
 }) 
 
 function validarHora(hora) {
-    // Esperamos que el formato de hora sea "HH:MM"
+    
     const [horas, minutos] = hora.split(':').map(Number);
 
     if (isNaN(horas) || isNaN(minutos)) {
-        return false; // Formato inválido
+        return false; 
     }
 
     const totalMinutos = horas * 60 + minutos;
-    const horarioApertura = 10 * 60; // 10:00 AM en minutos
-    const horarioCierre = 18 * 60;   // 6:00 PM en minutos
+    const horarioApertura = 10 * 60; 
+    const horarioCierre = 18 * 60;  
 
     return totalMinutos >= horarioApertura && totalMinutos <= horarioCierre;
 }
 
 function validarDiaLaboral(fecha) {
     const [anio, mes, dia] = fecha.split('-').map(Number);
-    const fechaObj = new Date(anio, mes - 1, dia); // Mes se indexa desde 0
+    const fechaObj = new Date(anio, mes - 1, dia); 
 
-    const diaSemana = fechaObj.getUTCDay(); // 0 = Domingo, 6 = Sábado
-    return diaSemana >= 1 && diaSemana <= 5; // Lunes a Viernes
+    const diaSemana = fechaObj.getUTCDay(); 
+    return diaSemana >= 1 && diaSemana <= 5; 
 }
 
 const TurnoModel = model('Turnos', TurnoSchema)
