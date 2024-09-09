@@ -41,7 +41,12 @@ const crear = async (body) => {
 
       const token = jwt.sign(payload, process.env.JWT_SECRET);
 
-      return { usuarioRegistrado, statusCode: 201, token: token };
+      return {
+        usuarioRegistrado,
+        statusCode: 201,
+        token: token,
+        rol: nuevoUsuario.rol,
+      };
     } catch (error) {
       console.error("Error al registrar usuario:", error);
       return {
