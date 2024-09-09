@@ -23,7 +23,7 @@ const loginUsuario = async (req, res) => {
     if (resultado.statusCode === 400) {
       res.status(500).json(resultado.mensaje);
     } else {
-      res.status(200).json(resultado.mensaje);
+      res.status(200).json(resultado);
     }
   } catch (error) {
     console.log(error);
