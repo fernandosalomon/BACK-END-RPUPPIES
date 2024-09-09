@@ -11,28 +11,36 @@ const crear = async (body) => {
     };
   }
 
-  const nuevoUsuario = new UsuarioModel({
-    email,
-    contrasenia,
-    nombre,
-    apellido,
-    telefono,
-  });
-
-  try {
-    const saltos = bcrypt.genSaltSync(10);
-    nuevoUsuario.contrasenia = bcrypt.hashSync(
-      nuevoUsuario.contrasenia,
-      saltos
-    );
-    const usuarioRegistrado = await nuevoUsuario.save();
-    return usuarioRegistrado;
-  } catch (error) {
-    console.error("Error al registrar usuario:", error);
+  const usuarioExiste = await UsuarioModel.findOne({ email: email });
+  if (usuarioExiste) {
     return {
-      mensaje: "Error al registrar nuevo usuario.",
-      error: error.message,
+      mensaje: "El email corresponde a un usuario ya registrado",
+      statusCode: 400,
     };
+  } else {
+    const nuevoUsuario = new UsuarioModel({
+      email,
+      contrasenia,
+      nombre,
+      apellido,
+      telefono,
+    });
+
+    try {
+      const saltos = bcrypt.genSaltSync(10);
+      nuevoUsuario.contrasenia = bcrypt.hashSync(
+        nuevoUsuario.contrasenia,
+        saltos
+      );
+      const usuarioRegistrado = await nuevoUsuario.save();
+      return { usuarioRegistrado, statusCode: 201 };
+    } catch (error) {
+      console.error("Error al registrar usuario:", error);
+      return {
+        mensaje: "Error al registrar nuevo usuario (" + error + ")",
+        statusCode: 400,
+      };
+    }
   }
 };
 
@@ -98,12 +106,14 @@ const actualizar = async (idUsuario, body) => {
     };
   }
 
-  const { email, nombre, apellido, telefono } = body;
+  const { email, nombre, apellido, telefono, bloqueado, rol } = body;
   const camposPermitidos = {};
-  if (email) camposPermitidos.email = email;
-  if (nombre) camposPermitidos.nombre = nombre;
-  if (apellido) camposPermitidos.apellido = apellido;
-  if (telefono) camposPermitidos.telefono = telefono;
+  if (email !== undefined) camposPermitidos.email = email;
+  if (nombre !== undefined) camposPermitidos.nombre = nombre;
+  if (apellido !== undefined) camposPermitidos.apellido = apellido;
+  if (telefono !== undefined) camposPermitidos.telefono = telefono;
+  if (bloqueado !== undefined) camposPermitidos.bloqueado = bloqueado;
+  if (rol !== undefined) camposPermitidos.rol = rol;
 
   if (Object.keys(camposPermitidos).length > 0) {
     const usuarioActualizado = await UsuarioModel.findByIdAndUpdate(
