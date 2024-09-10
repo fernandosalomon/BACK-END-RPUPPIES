@@ -1,4 +1,4 @@
-const servicioMascotas = require('../services/mascotaService');
+
 
 const obtenerTodasLasMascotas = async (req, res) => {
     const resultado = await servicioMascotas.obtenerMascotas();

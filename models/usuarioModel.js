@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const Mascota = require("./mascotaModel");
 
 const UsuarioSchema = new Schema({
   email: {
@@ -47,6 +48,12 @@ const UsuarioSchema = new Schema({
     },
     default: false,
   },
+  mascotas: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Mascotas",
+    },
+  ],
 });
 
 UsuarioSchema.methods.toJSON = function () {
