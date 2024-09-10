@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "dev": "node --watch --env-file .env index.js"
+    "dev": "node --watch --env-file=.env index.js"
   },
   "author": "",
   "license": "ISC",
