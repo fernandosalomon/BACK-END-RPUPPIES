@@ -1,4 +1,5 @@
 const MascotaModel = require(`../models/mascotaModel`);
+const cloudinary = require('../helpers/cloudinaryConfig');
 
 const obtenerMascotas = async () => {
     const mascotas = await MascotaModel.find();
@@ -103,11 +104,27 @@ const eliminar = async (idMascota) => {
     };
 }
 
+const crearActualizarImg = async (file, idMascota) =>{
+    try {
+        const mascota = await MascotaModel.findOne({_id: idMascota});
+        const image = await cloudinary.uploader.upload(file.path);
+
+        mascota.imagen = image.secure_url;
+        await mascota.save();
+        return {
+            imageUrl: image.secure_url,
+            statusCode: 200,
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 module.exports = {
     obtenerMascotas,
     obtenerMascotaPorID,
     crear,
     actualizar,
-    eliminar
+    eliminar,
+    crearActualizarImg
 };

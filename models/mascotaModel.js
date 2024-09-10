@@ -56,7 +56,7 @@ const MascotaSchema = new Schema({
         }
     },
     esterilizado: {
-        type: Boolean,
+        type: String,
         required: true
     },
     domicilio: {
@@ -69,6 +69,10 @@ const MascotaSchema = new Schema({
         type: String,
         minlength: 3,
         maxlength: 250
+    },
+    imagen: {
+        type: String,
+        default: "https://asset.cloudinary.com/dmxikj53v/36c8cb8fe53082fcddbadfff6516d28b"
     }
 });
 
