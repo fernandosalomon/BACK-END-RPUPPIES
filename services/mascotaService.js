@@ -1,5 +1,55 @@
 const MascotaModel = require(`../models/mascotaModel`);
 
+const getAllPetsService = async (idUser) => {
+    
+    if(!user){
+        return{
+            mensaje: "El usuario no coincide con un usuario registrado",
+            statusCode: 400,
+        }
+    }else{
+        try{
+            const user = await UserModel.findById(idUser);
+            return {mascotas: user.mascotas, statusCode: 200}
+        }catch(error){
+            return {
+                mensaje: "No se pudo obtener respuesta de la DB",
+                statusCode: 500,
+            }
+        }
+       
+    }
+}
+
+const getPetService = async ({userID, mascotaID}) => {
+    if(!userID){
+        return{
+            mensaje: "Usuario y/o mascota incorrectos o inexistentes",
+            statusCode: 400,
+        }
+    }else{
+        try {
+            const user = await UserModel.findById(idUser);
+            const mascota = user.mascotas.filter((mascota) => mascota._id === mascotaID);
+            if(!mascota){
+                return{
+                    mensaje: "El usuario no coincide con un usuario registrado",
+                    statusCode: 400,
+                }
+            }else{
+                return {mascotas: user.mascotas, statusCode: 200}
+            }
+        } catch (error) {
+            return {
+                mensaje: "No se pudo obtener respuesta de la DB",
+                statusCode: 500,
+            }
+        }
+    }
+
+}
+
+
 const obtenerMascotas = async () => {
     const mascotas = await MascotaModel.find();
     if(!mascotas){
@@ -96,6 +146,8 @@ const eliminar = async (idMascota) => {
 
 
 module.exports = {
+    getAllPetsService,
+    getPetService,
     obtenerMascotas,
     obtenerMascotaPorID,
     crear,
