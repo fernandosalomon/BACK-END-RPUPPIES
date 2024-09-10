@@ -1,5 +1,5 @@
 const express = require(`express`);
-const { obtenerTodasLasMascotas, obtenerMascota, crearMascota, actualizarMascota, eliminarMascota, getAllPetsController, getPetController } = require("../controllers/mascotasController");
+const {getAllPetsController, getPetController, createPetController, deletePetController, updatePetController } = require("../controllers/mascotasController");
 
 const router = express.Router();
 
@@ -10,12 +10,12 @@ router.get("/:idUsuario", getAllPetsController);
 router.get("/:objIDUsuarioMascota", getPetController);
 
 /* CREAR MASCOTA */
-router.post("/:idUsuario", crearMascota);
+router.post("/:idUsuario", createPetController);
 
 /* ACTUALIZAR */
-router.put("/:objIDUsuarioMascota", actualizarMascota);
+router.put("/:objIDUsuarioMascota", updatePetController);
 
 /* ELIMINAR */
-router.delete("/:objIDUsuarioMascota", eliminarMascota);
+router.delete("/:objIDUsuarioMascota", deletePetController);
 
 module.exports = router;
