@@ -52,8 +52,15 @@ const UsuarioSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: "Mascotas",
-    },
-  ],
+    }, ],
+
+    imagen: {
+        type : String,
+        default: "" ,//agregar url x defecto
+    }
+
+ 
+
 });
 
 UsuarioSchema.methods.toJSON = function () {

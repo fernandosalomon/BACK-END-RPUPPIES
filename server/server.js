@@ -22,11 +22,13 @@ class Server {
     this.app.use(`/api/usuarios`, require(`../routes/usuariosRoutes`));
   }
 
+
   listen() {
     this.app.listen(3001, () => {
       console.log("Server OK", 3001);
     });
   }
+
 }
 
 module.exports = Server;

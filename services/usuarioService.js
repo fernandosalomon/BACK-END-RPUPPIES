@@ -1,6 +1,7 @@
 const UsuarioModel = require(`../models/usuarioModel`);
 const bcrypt = require(`bcrypt`);
 const jwt = require(`jsonwebtoken`);
+const cloudinary = require("../helpers/cloudinaryConfig")
 
 const crear = async (body) => {
   const { email, contrasenia, nombre, apellido, telefono } = body;
@@ -159,11 +160,33 @@ const eliminar = async (idUsuario) => {
   }
 };
 
+const agregarOactualizarImg = async (file, idUsuario)=> {
+    console.log(file);
+    const usuario = await UsuarioModel.findOne({_id: idUsuario})
+    const imagen = await cloudinary.uploader.upload(file.path)
+    console.log(imagen);
+
+    usuario.imagen = imagen.secure_url;
+    await usuario.save()
+    
+    return {
+        imagenUrl: imagen.secure_url,
+        statusCode: 200,
+    }
+    try {
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
-  crear,
-  login,
-  obtenerUsuarios,
-  obtenerUsuarioPorID,
-  actualizar,
-  eliminar,
-};
+    crear,
+    login,
+    obtenerUsuarios,
+    obtenerUsuarioPorID,
+    actualizar,
+    eliminar,
+    agregarOactualizarImg
+}
+
