@@ -13,53 +13,45 @@ const MascotaSchema = new Schema({
         required: true,
         minlength: 3,
         maxlength: 100
+  },
+  especie: {
+    type: String,
+    enum: ["felino", "canino", "otro"],
+    required: true,
+  },
+  sexo: {
+    type: String,
+    enum: ["hembra", "macho"],
+    required: true,
+  },
+  raza: {
+    type: String,
+    required: true,
+    minlength: 3,
+    maxlength: 100,
+  },
+  colorDePelo: {
+    type: String,
+    required: true,
+    minlength: 3,
+    maxlength: 100,
+  },
+  pesoKg: {
+    type: Number,
+    required: true,
+    min: [0.1],
+    max: [100],
+    validate: {
+      validator: Number.isFinite,
+      message: "El peso debe ser un número válido.",
     },
-    fechaDeNacimiento: {
-        type: Date,
-        required: true,
-        validate: {
-            validator: dateValidator,
-            message: 'La fecha de nacimiento debe ser mayor a 01-01-1900 y menor o igual a la fecha actual.'
-        }
-    },
-    sexo: {
-        type: String,
-        required: true,
-        minlength: 3,
-        maxlength: 100
-    },
-    especie: {
-        type: String,
-        required: true,
-        minlength: 3,
-        maxlength: 100
-    },
-    raza: {
-        type: String,
-        required: true,
-        minlength: 3,
-        maxlength: 100
-    },
-    colorDePelo: {
-        type: String,
-        required: true,
-        minlength: 3,
-        maxlength: 100
-    },
-    pesoKg: {
-        type: Number,
-        required: true,
-        min: [0.1],
-        max: [100],
-        validate: {
-            validator: Number.isFinite,
-            message: 'El peso debe ser un número válido.'
-        }
-    },
-    esterilizado: {
-        type: String,
-        required: true
-       },
+  },
+  esterilizado: {
+    type: String,
+    enum: ["true", "false"],
+    required: true,
+  },
+
   domicilio: {
     type: String,
     required: true,

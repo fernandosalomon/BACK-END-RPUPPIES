@@ -85,6 +85,7 @@ const login = async (body) => {
       mensaje: `Bienvenid@ ${usuario.nombre} ${usuario.apellido}`,
       token,
       rol: usuario.rol,
+      rol: usuario.rol,
     };
   } else {
     return {

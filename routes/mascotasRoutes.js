@@ -12,21 +12,21 @@ const {
 const router = express.Router();
 
 /* TRAER TODOS */
-router.get("/:idUsuario", getAllPetsController);
+router.get("/", getAllPetsController);
 
 /* TRAE UNA MASCOTA */
-router.get("/:idUsuario/:idMascota", getPetController);
+router.get("/:idMascota", getPetController);
 
 /* CREAR MASCOTA */
-router.post("/:idUsuario", createPetController);
+router.post("/", createPetController);
 
 /* AGREGAR IMAGEN O ACTUALIZAR*/
 router.post("/imgMascota/:idMascota", multer.single('image'), crearActualizarImgMascota)
 
 /* ACTUALIZAR */
-router.put("/:idUsuario/:idMascota", updatePetController);
+router.put("/:idMascota", updatePetController);
 
 /* ELIMINAR */
-router.delete("/:idUsuario/:idMascota", deletePetController);
+router.delete("/:idMascota", deletePetController);
 
 module.exports = router;

@@ -5,14 +5,20 @@ const {
   updatePetService,
   deletePetService,
 } = require("../services/mascotaService");
+const jwt = require(`jsonwebtoken`);
 
 
 const getAllPetsController = async (req, res) => {
-  const result = await getAllPetsService(req.params.idUsuario);
-  if (result.statusCode === 200) {
-    res.status(200).json(result);
+  if (!req.headers.auth) {
+    res.status(401).json({ mensaje: "Usuario no autorizado" });
   } else {
-    res.status(result.statusCode).json(result.mensaje);
+    const idUsuario = jwt.verify(req.headers.auth, process.env.JWT_SECRET)._id;
+    const result = await getAllPetsService(idUsuario);
+    if (result.statusCode === 200) {
+      res.status(200).json(result.mascotas);
+    } else {
+      res.status(result.statusCode).json(result.mensaje);
+    }
   }
 };
 
@@ -29,24 +35,34 @@ const getPetController = async (req, res) => {
 };
 
 const createPetController = async (req, res) => {
-  const result = await createPetService(req.params.idUsuario, req.body);
-  if (result.statusCode === 201) {
-    res.status(201).json(result);
+  if (!req.headers.auth) {
+    res.status(401).json({ mensaje: "Usuario no autorizado" });
   } else {
-    res.status(result.statusCode).json(result.mensaje);
+    const idUsuario = jwt.verify(req.headers.auth, process.env.JWT_SECRET)._id;
+    const result = await createPetService(idUsuario, req.body);
+    if (result.statusCode === 201) {
+      res.status(201).json(result);
+    } else {
+      res.status(result.statusCode).json(result.mensaje);
+    }
   }
 };
 
 const updatePetController = async (req, res) => {
-  const result = await updatePetService(
-    req.params.idUsuario,
-    req.params.idMascota,
-    req.body
-  );
-  if (result.statusCode === 200) {
-    res.status(200).json(result);
+  if (!req.headers.auth) {
+    res.status(401).json({ mensaje: "Usuario no autorizado" });
   } else {
-    res.status(result.statusCode).json(result.mensaje);
+    const idUsuario = jwt.verify(req.headers.auth, process.env.JWT_SECRET)._id;
+    const result = await updatePetService(
+      idUsuario,
+      req.params.idMascota,
+      req.body
+    );
+    if (result.statusCode === 200) {
+      res.status(200).json(result);
+    } else {
+      res.status(result.statusCode).json(result.mensaje);
+    }
   }
 };
 
