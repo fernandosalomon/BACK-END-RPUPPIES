@@ -38,11 +38,8 @@ const TurnoSchema = new Schema({
     detalles:{
         type: String,
         maxlength: 250,
-    },
-    duenio:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Usuario',
     }
+
 }) 
 
 function validarHora(hora) {

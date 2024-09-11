@@ -271,32 +271,10 @@ const eliminar = async (idTurno) => {
     };
 }
 
-const disponibilidadTurno = async () =>{
-    
-        const turnos = await Turno.find(); // Obtener todos los turnos
-        const disponibilidad = {}; // Manejaremos la disponibilidad por fecha y veterinario
-
-        turnos.forEach(turno => {
-            const { fecha, hora, veterinario } = turno;
-
-            if (!disponibilidad[fecha]) {
-                disponibilidad[fecha] = {};
-            }
-
-            if (!disponibilidad[fecha][hora]) {
-                disponibilidad[fecha][hora] = [];
-            }
-
-            // Guardar el veterinario que ya tiene turno en ese horario y fecha
-            disponibilidad[fecha][hora].push(veterinario);
-        });
-}
-
 module.exports ={
     obtenerTurnos,
     obtenerUnTurno,
     agregar,
     editar,
     eliminar,
-    disponibilidadTurno
 }
