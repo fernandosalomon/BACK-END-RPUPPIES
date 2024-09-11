@@ -7,6 +7,7 @@ const {
 } = require("../services/mascotaService");
 const jwt = require(`jsonwebtoken`);
 
+
 const getAllPetsController = async (req, res) => {
   if (!req.headers.auth) {
     res.status(401).json({ mensaje: "Usuario no autorizado" });
@@ -84,3 +85,4 @@ module.exports = {
   deletePetController,
   updatePetController,
 };
+

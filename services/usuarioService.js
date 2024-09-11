@@ -122,33 +122,36 @@ const actualizar = async (idUsuario, body) => {
     };
   }
 
-  const { email, nombre, apellido, telefono, bloqueado, rol } = body;
-  const camposPermitidos = {};
-  if (email !== undefined) camposPermitidos.email = email;
-  if (nombre !== undefined) camposPermitidos.nombre = nombre;
-  if (apellido !== undefined) camposPermitidos.apellido = apellido;
-  if (telefono !== undefined) camposPermitidos.telefono = telefono;
-  if (bloqueado !== undefined) camposPermitidos.bloqueado = bloqueado;
-  if (rol !== undefined) camposPermitidos.rol = rol;
+  
 
-  if (Object.keys(camposPermitidos).length > 0) {
-    const usuarioActualizado = await UsuarioModel.findByIdAndUpdate(
-      idUsuario,
-      body,
-      { new: true }
-    );
-    if (!usuarioActualizado) {
-      return {
-        mensajeError: "Usuario no encontrado",
-      };
+
+    const { email, nombre, apellido, telefono, rol, bloqueado} = body;
+    const camposPermitidos = {};
+    if (email) camposPermitidos.email = email;
+    if (nombre) camposPermitidos.nombre = nombre;
+    if (apellido) camposPermitidos.apellido = apellido;
+    if (telefono) camposPermitidos.telefono = telefono;
+    if (rol) camposPermitidos.rol = rol;
+    if (bloqueado) camposPermitidos.bloqueado = bloqueado;
+
+    if (Object.keys(camposPermitidos).length > 0) {
+        const usuarioActualizado = await UsuarioModel.findByIdAndUpdate(
+            idUsuario,
+            body,
+            { new: true }
+        );
+        if (!usuarioActualizado) {
+            return {
+                mensajeError: "Usuario no encontrado"
+            };
+        }
+        return usuarioActualizado;
+    } else {
+        return {
+            mensajeError: "Error al actualizar mascota"
+        };
     }
-    return usuarioActualizado;
-  } else {
-    return {
-      mensajeError: "Error al actualizar usuario",
-    };
-  }
-};
+  };
 
 const eliminar = async (idUsuario) => {
   const usuarioEliminado = await UsuarioModel.findByIdAndDelete({

@@ -3,6 +3,7 @@ const express = require(`express`);
 const cors = require("cors");
 const cors = require("cors");
 
+
 class Server {
   constructor() {
     this.app = express();
@@ -10,6 +11,11 @@ class Server {
     this.rutas();
   }
 
+    rutas(){
+        this.app.use("/api/mascotas", require(`../routes/mascotasRoutes`));
+        this.app.use(`/api/usuarios`, require(`../routes/usuariosRoutes`));
+        this.app.use(`/api/turnos`, require(`../routes/turnosRoutes`));
+    }
   middleware() {
     /* HABILITAMOS JSON */
     this.app.use(express.json());
