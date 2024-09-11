@@ -1,6 +1,21 @@
 const MascotaModel = require(`../models/mascotaModel`);
-const cloudinary = require('../helpers/cloudinaryConfig');
+const cloudinary = require("../helpers/cloudinaryConfig");
 const UsuarioModel = require("../models/usuarioModel");
+
+const getAllPetsAdminService = async () => {
+  try {
+    const allPets = await MascotaModel.find();
+    return {
+      mascotas: allPets,
+      statusCode: 200,
+    };
+  } catch (error) {
+    return {
+      mensaje: "No se pudo obtener respuesta de la DB.",
+      statusCode: 500,
+    };
+  }
+};
 
 const getAllPetsService = async (userID) => {
   if (!userID) {
@@ -39,7 +54,6 @@ const getPetService = async (userID, mascotaID) => {
         };
       }
       if (pet.idOwner.toString() !== userID) {
-
         return {
           mensaje: "El usuario no es dueño de la mascota",
           statusCode: 400,
@@ -160,7 +174,6 @@ const updatePetService = async (userID, mascotaID, petData) => {
   }
 };
 
-
 const deletePetService = async (userID, petID) => {
   if (!userID || !petID) {
     return {
@@ -195,27 +208,28 @@ const deletePetService = async (userID, petID) => {
   }
 };
 
-const crearActualizarImg = async (file, idMascota) =>{
-    try {
-        const mascota = await MascotaModel.findOne({_id: idMascota});
-        const image = await cloudinary.uploader.upload(file.path);
+const crearActualizarImg = async (file, idMascota) => {
+  try {
+    const mascota = await MascotaModel.findOne({ _id: idMascota });
+    const image = await cloudinary.uploader.upload(file.path);
 
-        mascota.imagen = image.secure_url;
-        await mascota.save();
-        return {
-            imageUrl: image.secure_url,
-            statusCode: 200,
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
+    mascota.imagen = image.secure_url;
+    await mascota.save();
+    return {
+      imageUrl: image.secure_url,
+      statusCode: 200,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 module.exports = {
+  getAllPetsAdminService,
   getAllPetsService,
   getPetService,
   createPetService,
   deletePetService,
   updatePetService,
-  crearActualizarImg
+  crearActualizarImg,
 };

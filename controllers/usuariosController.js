@@ -1,7 +1,6 @@
 const UsuarioModel = require("../models/usuarioModel");
 const usuarioService = require(`../services/usuarioService`);
 
-
 //REGISTRO USUARIO
 const registroUsuario = async (req, res) => {
   try {
@@ -92,7 +91,6 @@ const eliminarUsuario = async (req, res) => {
   }
 };
 
-
 //RECUPERAR CONTRASEÑA
 const resetPasswordController = async (req, res) => {
   try {
@@ -101,20 +99,24 @@ const resetPasswordController = async (req, res) => {
       res.status(200).json({ userID: result.userID });
     } else {
       res.status(401).json({ msg: "Usuario no autorizado" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 // AGREGAR O ACTUALIZAR IMAGEN
 
-const agregarOactualizarImgUsuario = async (req, res) =>{
-    console.log(req.body);
-    try {
-        const result = await usuarioService.agregarOactualizarImg(req.file, req.params.idUsuario)
+const agregarOactualizarImgUsuario = async (req, res) => {
+  console.log(req.body);
+  try {
+    const result = await usuarioService.agregarOactualizarImg(
+      req.file,
+      req.params.idUsuario
+    );
 
-        if(result.statusCode === 200){
-            res.status(200).json({msg: "imagen cargada con exito"})
-        }
-    } catch (error) {
-        console.log(error);
-
+    if (result.statusCode === 200) {
+      res.status(200).json({ msg: "imagen cargada con exito" });
     }
   } catch (error) {
     console.log(error);
@@ -129,7 +131,5 @@ module.exports = {
   obtenerUsuario,
   actualizarUsuario,
   eliminarUsuario,
-  agregarOactualizarImgUsuario
+  agregarOactualizarImgUsuario,
 };
-
-

@@ -1,4 +1,5 @@
 const {
+  getAllPetsAdminService,
   getAllPetsService,
   getPetService,
   createPetService,
@@ -7,6 +8,18 @@ const {
 } = require("../services/mascotaService");
 const jwt = require(`jsonwebtoken`);
 
+const getAllPetsAdminController = async (req, res) => {
+  const allPets = await getAllPetsAdminService();
+  if (allPets.mascotas.lenght === 0) {
+    res.status(200).json({ mensaje: "No hay mascotas para mostrar" });
+  } else {
+    if (allPets.statusCode === 200) {
+      res.status(200).json(allPets.mascotas);
+    } else {
+      res.status(allPets.statusCode).json(allPets.mensaje);
+    }
+  }
+};
 
 const getAllPetsController = async (req, res) => {
   if (!req.headers.auth) {
@@ -79,10 +92,10 @@ const deletePetController = async (req, res) => {
 };
 
 module.exports = {
+  getAllPetsAdminController,
   getAllPetsController,
   getPetController,
   createPetController,
   deletePetController,
   updatePetController,
 };
-

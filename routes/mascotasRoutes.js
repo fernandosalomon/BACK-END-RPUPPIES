@@ -7,11 +7,13 @@ const {
   deletePetController,
   updatePetController,
   crearActualizarImgMascota,
+  getAllPetsAdminController,
 } = require("../controllers/mascotasController");
 
 const router = express.Router();
 
 /* TRAER TODOS */
+router.get("/all/", getAllPetsAdminController);
 router.get("/", getAllPetsController);
 
 /* TRAE UNA MASCOTA */
@@ -20,8 +22,8 @@ router.get("/:idMascota", getPetController);
 /* CREAR MASCOTA */
 router.post("/", createPetController);
 
-/* AGREGAR IMAGEN O ACTUALIZAR*/
-router.post("/imgMascota/:idMascota", multer.single('image'), crearActualizarImgMascota)
+// /* AGREGAR IMAGEN O ACTUALIZAR*/
+// router.post("/imgMascota/:idMascota", multer.single('image'), crearActualizarImgMascota)
 
 /* ACTUALIZAR */
 router.put("/:idMascota", updatePetController);

@@ -1,18 +1,11 @@
-const { Schema, model } = require('mongoose');
-
-const dateValidator = (value) => {
-    const minDate = new Date('1900-01-01');
-    const maxDate = new Date();
-    return value >= minDate && value <= maxDate;
-};
-
+const dateValidator = require("../helpers/dateValidator");
 const { Schema, model } = require("mongoose");
 const MascotaSchema = new Schema({
-    nombre: {
-        type: String,
-        required: true,
-        minlength: 3,
-        maxlength: 100
+  nombre: {
+    type: String,
+    required: true,
+    minlength: 3,
+    maxlength: 100,
   },
   especie: {
     type: String,
@@ -59,21 +52,21 @@ const MascotaSchema = new Schema({
     maxlength: 100,
   },
 
-   observaciones: {
-        type: String,
-        minlength: 3,
-        maxlength: 250
-    },
-    imagen: {
-        type: String,
-        default: "https://asset.cloudinary.com/dmxikj53v/36c8cb8fe53082fcddbadfff6516d28b"
-    },
+  observaciones: {
+    type: String,
+    minlength: 3,
+    maxlength: 250,
+  },
+  imagen: {
+    type: String,
+    default:
+      "https://asset.cloudinary.com/dmxikj53v/36c8cb8fe53082fcddbadfff6516d28b",
+  },
 
   idOwner: {
     type: Schema.Types.ObjectId,
     ref: "Usuarios",
   },
-
 });
 
 const MascotaModel = model("Mascotas", MascotaSchema);
