@@ -1,6 +1,7 @@
 const UsuarioModel = require("../models/usuarioModel");
 const usuarioService = require(`../services/usuarioService`);
 
+
 //REGISTRO USUARIO
 const registroUsuario = async (req, res) => {
     try{
@@ -94,11 +95,27 @@ const eliminarUsuario = async (req, res) => {
     }
 }
 
+// AGREGAR O ACTUALIZAR IMAGEN
+
+const agregarOactualizarImgUsuario = async (req, res) =>{
+    console.log(req.body);
+    try {
+        const result = await usuarioService.agregarOactualizarImg(req.file, req.params.idUsuario)
+
+        if(result.statusCode === 200){
+            res.status(200).json({msg: "imagen cargada con exito"})
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     registroUsuario,
     loginUsuario,
     obtenerTodosLosUsuarios,
     obtenerUsuario,
     actualizarUsuario,
-    eliminarUsuario
+    eliminarUsuario,
+    agregarOactualizarImgUsuario
 }

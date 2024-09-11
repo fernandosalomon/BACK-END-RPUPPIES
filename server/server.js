@@ -21,9 +21,9 @@ class Server{
     }
 
     listen(){
-        this.app.listen(3001, () =>{
+        this.app.listen(3002, () =>{
             console.log("Server OK", 3001);
-        });
+        }); 
     }
 }
 

@@ -40,6 +40,10 @@ const UsuarioSchema = new Schema({
         type: Boolean,
         default: false,
     },
+    imagen: {
+        type : String,
+        default: "" ,//agregar url x defecto
+    }
 });
 
 UsuarioSchema.methods.toJSON = function () {
