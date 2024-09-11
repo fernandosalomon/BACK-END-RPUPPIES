@@ -6,6 +6,7 @@ const dateValidator = (value) => {
     return value >= minDate && value <= maxDate;
 };
 
+const { Schema, model } = require("mongoose");
 const MascotaSchema = new Schema({
     nombre: {
         type: String,
@@ -58,14 +59,15 @@ const MascotaSchema = new Schema({
     esterilizado: {
         type: String,
         required: true
-    },
-    domicilio: {
-        type: String,
-        required: true,
-        minlength: 3,
-        maxlength: 100
-    },
-    observaciones: {
+       },
+  domicilio: {
+    type: String,
+    required: true,
+    minlength: 3,
+    maxlength: 100,
+  },
+
+   observaciones: {
         type: String,
         minlength: 3,
         maxlength: 250
@@ -73,8 +75,14 @@ const MascotaSchema = new Schema({
     imagen: {
         type: String,
         default: "https://asset.cloudinary.com/dmxikj53v/36c8cb8fe53082fcddbadfff6516d28b"
-    }
+    },
+
+  idOwner: {
+    type: Schema.Types.ObjectId,
+    ref: "Usuarios",
+  },
+
 });
 
-const MascotaModel = model('Mascotas', MascotaSchema);
+const MascotaModel = model("Mascotas", MascotaSchema);
 module.exports = MascotaModel;
