@@ -1,5 +1,7 @@
 const { Schema, model } = require("mongoose");
 const dateValidator = require("../helpers/dateValidator");
+const Mascota = require("./mascotaModel");
+
 
 const UsuarioSchema = new Schema({
   email: {
@@ -42,20 +44,35 @@ const UsuarioSchema = new Schema({
   },
   bloqueado: {
     type: Boolean,
+    enum: {
+      values: [true, false],
+      message: "{VALUE} is not supported",
+    },
     default: false,
   },
+
   mascotas: [
     {
       type: Schema.Types.ObjectId,
       ref: "Mascotas",
     },
   ],
+
+  imagen: {
+        type : String,
+        default: "" ,//agregar url x defecto
+  }
+
 });
 
 UsuarioSchema.methods.toJSON = function () {
   const { contrasenia, ...usuario } = this.toObject();
   return usuario;
 };
+
+
+Schema.Types.Boolean.convertToFalse.add(false);
+
 
 const UsuarioModel = model("Usuario", UsuarioSchema);
 module.exports = UsuarioModel;

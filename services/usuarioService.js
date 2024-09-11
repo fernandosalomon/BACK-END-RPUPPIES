@@ -1,6 +1,7 @@
 const UsuarioModel = require(`../models/usuarioModel`);
 const bcrypt = require(`bcrypt`);
 const jwt = require(`jsonwebtoken`);
+const cloudinary = require("../helpers/cloudinaryConfig")
 
 const crear = async (body) => {
   const { email, contrasenia, nombre, apellido, telefono } = body;
@@ -11,36 +12,49 @@ const crear = async (body) => {
     };
   }
 
-  const nuevoUsuario = new UsuarioModel({
-    email,
-    contrasenia,
-    nombre,
-    apellido,
-    telefono,
-  });
-
-  try {
-    const saltos = bcrypt.genSaltSync(10);
-    nuevoUsuario.contrasenia = bcrypt.hashSync(
-      nuevoUsuario.contrasenia,
-      saltos
-    );
-    const usuarioRegistrado = await nuevoUsuario.save();
-
-    const payload = {
-      _id: nuevoUsuario._id,
-      rol: "user",
-    };
-
-    const token = jwt.sign(payload, process.env.JWT_SECRET);
-
-    return { usuarioRegistrado, token: token, rol: "user" };
-  } catch (error) {
-    console.error("Error al registrar usuario:", error);
+  const usuarioExiste = await UsuarioModel.findOne({ email: email });
+  if (usuarioExiste) {
     return {
-      mensaje: "Error al registrar nuevo usuario.",
-      error: error.message,
+      mensaje: "El email corresponde a un usuario ya registrado",
+      statusCode: 400,
     };
+  } else {
+    const nuevoUsuario = new UsuarioModel({
+      email,
+      contrasenia,
+      nombre,
+      apellido,
+      telefono,
+    });
+
+    try {
+      const saltos = bcrypt.genSaltSync(10);
+      nuevoUsuario.contrasenia = bcrypt.hashSync(
+        nuevoUsuario.contrasenia,
+        saltos
+      );
+      const usuarioRegistrado = await nuevoUsuario.save();
+
+      const payload = {
+        _id: nuevoUsuario._id,
+        rol: nuevoUsuario.rol,
+      };
+
+      const token = jwt.sign(payload, process.env.JWT_SECRET);
+
+      return {
+        usuarioRegistrado,
+        statusCode: 201,
+        token: token,
+        rol: nuevoUsuario.rol,
+      };
+    } catch (error) {
+      console.error("Error al registrar usuario:", error);
+      return {
+        mensaje: "Error al registrar nuevo usuario (" + error + ")",
+        statusCode: 400,
+      };
+    }
   }
 };
 
@@ -70,6 +84,7 @@ const login = async (body) => {
     return {
       mensaje: `Bienvenid@ ${usuario.nombre} ${usuario.apellido}`,
       token,
+      rol: usuario.rol,
       rol: usuario.rol,
     };
   } else {
@@ -107,12 +122,14 @@ const actualizar = async (idUsuario, body) => {
     };
   }
 
-  const { email, nombre, apellido, telefono } = body;
+  const { email, nombre, apellido, telefono, bloqueado, rol } = body;
   const camposPermitidos = {};
-  if (email) camposPermitidos.email = email;
-  if (nombre) camposPermitidos.nombre = nombre;
-  if (apellido) camposPermitidos.apellido = apellido;
-  if (telefono) camposPermitidos.telefono = telefono;
+  if (email !== undefined) camposPermitidos.email = email;
+  if (nombre !== undefined) camposPermitidos.nombre = nombre;
+  if (apellido !== undefined) camposPermitidos.apellido = apellido;
+  if (telefono !== undefined) camposPermitidos.telefono = telefono;
+  if (bloqueado !== undefined) camposPermitidos.bloqueado = bloqueado;
+  if (rol !== undefined) camposPermitidos.rol = rol;
 
   if (Object.keys(camposPermitidos).length > 0) {
     const usuarioActualizado = await UsuarioModel.findByIdAndUpdate(
@@ -128,7 +145,7 @@ const actualizar = async (idUsuario, body) => {
     return usuarioActualizado;
   } else {
     return {
-      mensajeError: "Error al actualizar mascota",
+      mensajeError: "Error al actualizar usuario",
     };
   }
 };
@@ -151,7 +168,28 @@ const resetPasswordService = async (token) => {
   } else {
     return { is_verify: false };
   }
+
 };
+
+const agregarOactualizarImg = async (file, idUsuario)=> {
+    console.log(file);
+    const usuario = await UsuarioModel.findOne({_id: idUsuario})
+    const imagen = await cloudinary.uploader.upload(file.path)
+    console.log(imagen);
+
+    usuario.imagen = imagen.secure_url;
+    await usuario.save()
+    
+    return {
+        imagenUrl: imagen.secure_url,
+        statusCode: 200,
+    }
+    try {
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 module.exports = {
   crear,
@@ -161,4 +199,6 @@ module.exports = {
   actualizar,
   eliminar,
   resetPasswordService,
+  agregarOactualizarImg
 };
+
