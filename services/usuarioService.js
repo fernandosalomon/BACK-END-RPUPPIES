@@ -160,6 +160,16 @@ const eliminar = async (idUsuario) => {
   }
 };
 
+const resetPasswordService = async (token) => {
+  const verifyToken = jwt.verify(token, process.env.JWT_SECRET);
+  if (verifyToken) {
+    return { is_verify: true, userID: verifyToken._id };
+  } else {
+    return { is_verify: false };
+  }
+
+};
+
 const agregarOactualizarImg = async (file, idUsuario)=> {
     console.log(file);
     const usuario = await UsuarioModel.findOne({_id: idUsuario})
@@ -181,12 +191,13 @@ const agregarOactualizarImg = async (file, idUsuario)=> {
 }
 
 module.exports = {
-    crear,
-    login,
-    obtenerUsuarios,
-    obtenerUsuarioPorID,
-    actualizar,
-    eliminar,
-    agregarOactualizarImg
-}
+  crear,
+  login,
+  obtenerUsuarios,
+  obtenerUsuarioPorID,
+  actualizar,
+  eliminar,
+  resetPasswordService,
+  agregarOactualizarImg
+};
 

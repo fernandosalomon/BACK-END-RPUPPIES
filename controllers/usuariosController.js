@@ -6,8 +6,9 @@ const usuarioService = require(`../services/usuarioService`);
 const registroUsuario = async (req, res) => {
   try {
     const resultado = await usuarioService.crear(req.body);
-    if (resultado.statusCode !== 201) {
-      res.status(400).json(resultado);
+
+    if (resultado.mensaje) {
+      res.status(404).json(resultado.mensaje);
     } else {
       res.status(201).json(resultado);
     }
@@ -22,7 +23,7 @@ const loginUsuario = async (req, res) => {
   try {
     const resultado = await usuarioService.login(req.body);
     if (resultado.statusCode === 400) {
-      res.status(500).json(resultado.mensaje);
+      res.status(400).json(resultado);
     } else {
       res.status(200).json(resultado);
     }
@@ -91,6 +92,16 @@ const eliminarUsuario = async (req, res) => {
   }
 };
 
+
+//RECUPERAR CONTRASEÑA
+const resetPasswordController = async (req, res) => {
+  try {
+    const result = await usuarioService.resetPasswordService(req.params.token);
+    if (result.is_verify) {
+      res.status(200).json({ userID: result.userID });
+    } else {
+      res.status(401).json({ msg: "Usuario no autorizado" });
+
 // AGREGAR O ACTUALIZAR IMAGEN
 
 const agregarOactualizarImgUsuario = async (req, res) =>{
@@ -103,16 +114,22 @@ const agregarOactualizarImgUsuario = async (req, res) =>{
         }
     } catch (error) {
         console.log(error);
+
     }
-}
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
 
 module.exports = {
-    registroUsuario,
-    loginUsuario,
-    obtenerTodosLosUsuarios,
-    obtenerUsuario,
-    actualizarUsuario,
-    eliminarUsuario,
-    agregarOactualizarImgUsuario
-}
+  registroUsuario,
+  loginUsuario,
+  obtenerTodosLosUsuarios,
+  obtenerUsuario,
+  actualizarUsuario,
+  eliminarUsuario,
+  agregarOactualizarImgUsuario
+};
+
 
