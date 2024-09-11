@@ -37,6 +37,8 @@ const agregar = async (body) => {
 
     const [horas, minutos] = hora.split(':').map(Number);
     
+    const [anio, mes, dia] = fecha.split('-').map(Number);
+    const fechaObj = new Date(anio, mes - 1, dia)
     const fechaProporcionada = new Date(anio, mes - 1, dia); 
 
     const fechaActual = new Date();
@@ -71,15 +73,13 @@ const agregar = async (body) => {
         }
     }
 
-    const [anio, mes, dia] = fecha.split('-').map(Number);
-    const fechaObj = new Date(anio, mes - 1, dia)
 
-    const diaSemana = fechaObj.getUTCDay()
-    if (!((diaSemana >= 1) && (diaSemana <= 5))){
-        return{
-            mensajeError: "Solo atendemos de Lunes a Viernes!"
-        }
-    }
+    const diaSemana = fechaObj.getUTCDay();
+if (diaSemana < 1 || diaSemana > 5) {
+    return {
+        mensajeError: "Solo atendemos de Lunes a Viernes!"
+    };
+}
 
 
     const turnoDuplicado = await TurnoModel.findOne({ fecha, hora, veterinario });
@@ -174,11 +174,11 @@ const editar = async (idTurno, body) => {
 
     const fechaObj = new Date(anio, mes - 1, dia)
 
-    const diaSemana = fechaObj.getUTCDay()
-    if (!((diaSemana >= 1) && (diaSemana <= 5))){
-        return{
+    const diaSemana = fechaObj.getUTCDay();
+    if (diaSemana < 1 || diaSemana > 5) {
+        return {
             mensajeError: "Solo atendemos de Lunes a Viernes!"
-        }
+        };
     }
 
     
@@ -197,6 +197,11 @@ const editar = async (idTurno, body) => {
             mensajeError: "ID de mascota Invalido"
         }
     }
+    if (fecha) turnoEditado.fecha = fecha;
+    if (hora) turnoEditado.hora = hora;
+    if (mascota) turnoEditado.mascota = mascota;
+    if (veterinario) turnoEditado.veterinario = veterinario;
+    if (detalles) turnoEditado.detalles = detalles;
 
     const turnoDuplicado = await TurnoModel.findOne({   
     fecha: turnoEditado.fecha,
@@ -211,11 +216,6 @@ const editar = async (idTurno, body) => {
         };
     }
 
-    if (fecha) turnoEditado.fecha = fecha;
-    if (hora) turnoEditado.hora = hora;
-    if (mascota) turnoEditado.mascota = mascota;
-    if (veterinario) turnoEditado.veterinario = veterinario;
-    if (detalles) turnoEditado.detalles = detalles;
 
     try {
         if (Object.keys(turnoEditado).length > 0) {
@@ -256,12 +256,6 @@ const eliminar = async (idTurno) => {
             mensajeError: "ID inválido"
         };
     }
-    const turnoExistente = await TurnoModel.findById(idTurno);
-    if (!turnoExistente) {
-        return {
-            mensajeError: "Turno no encontrado"
-        };
-    }
 
     const turnoEliminado = await TurnoModel.findByIdAndDelete(idTurno);
 
@@ -277,10 +271,32 @@ const eliminar = async (idTurno) => {
     };
 }
 
+const disponibilidadTurno = async () =>{
+    
+        const turnos = await Turno.find(); // Obtener todos los turnos
+        const disponibilidad = {}; // Manejaremos la disponibilidad por fecha y veterinario
+
+        turnos.forEach(turno => {
+            const { fecha, hora, veterinario } = turno;
+
+            if (!disponibilidad[fecha]) {
+                disponibilidad[fecha] = {};
+            }
+
+            if (!disponibilidad[fecha][hora]) {
+                disponibilidad[fecha][hora] = [];
+            }
+
+            // Guardar el veterinario que ya tiene turno en ese horario y fecha
+            disponibilidad[fecha][hora].push(veterinario);
+        });
+}
+
 module.exports ={
     obtenerTurnos,
     obtenerUnTurno,
     agregar,
     editar,
-    eliminar
+    eliminar,
+    disponibilidadTurno
 }

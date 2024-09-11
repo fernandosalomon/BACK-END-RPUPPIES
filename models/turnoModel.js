@@ -31,13 +31,17 @@ const TurnoSchema = new Schema({
         required: true
     },
     veterinario:{
-        type: String,//mongoose.Schema.Types.ObjectId,
+        type: String,
         ref:'Veterinarios',
-       // required: true
+        required: true
     },
     detalles:{
         type: String,
         maxlength: 250,
+    },
+    duenio:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Usuario',
     }
 }) 
 

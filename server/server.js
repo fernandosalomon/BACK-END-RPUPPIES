@@ -1,5 +1,6 @@
 require(`../DB/config`);
 const express = require(`express`);
+const cors = require('cors')
 
 class Server{
     constructor(){
@@ -13,6 +14,7 @@ class Server{
         this.app.use(express.json());
         /* ARCHIVOS STATICOS */
         this.app.use(express.static(`./public`));
+        this.app.use(cors())
     }
 
     rutas(){

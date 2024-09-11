@@ -48,10 +48,19 @@ const eliminarTurno = async (req, res) => {
     }
 }
 
+const disponibilidadTurno = async (req, res) =>{
+    try {  
+        res.json(disponibilidad);
+    } catch (error) {
+        res.status(500).send('Error al obtener la disponibilidad');
+    }
+}
+
 module.exports = {
     obtenerTodosLosTurnos,
     obtenerTurno,
     agregarTurno,
     editarTurno,
-    eliminarTurno
+    eliminarTurno,
+    disponibilidadTurno
 }
