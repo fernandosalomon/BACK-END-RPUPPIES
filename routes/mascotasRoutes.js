@@ -1,20 +1,34 @@
 const express = require(`express`);
-const { obtenerTodasLasMascotas, obtenerMascota, crearMascota, actualizarMascota, eliminarMascota } = require("../controllers/mascotasController");
+const multer = require("../middlewares/multer");
+const {
+  getAllPetsController,
+  getPetController,
+  createPetController,
+  deletePetController,
+  updatePetController,
+  crearActualizarImgMascota,
+  getAllPetsAdminController,
+} = require("../controllers/mascotasController");
+
 const router = express.Router();
 
 /* TRAER TODOS */
-router.get("/", obtenerTodasLasMascotas);
+router.get("/all/", getAllPetsAdminController);
+router.get("/", getAllPetsController);
 
 /* TRAE UNA MASCOTA */
-router.get("/:idMascota", obtenerMascota);
+router.get("/:idMascota", getPetController);
 
 /* CREAR MASCOTA */
-router.post("/", crearMascota);
+router.post("/", createPetController);
+
+// /* AGREGAR IMAGEN O ACTUALIZAR*/
+// router.post("/imgMascota/:idMascota", multer.single('image'), crearActualizarImgMascota)
 
 /* ACTUALIZAR */
-router.put("/:idMascota", actualizarMascota);
+router.put("/:idMascota", updatePetController);
 
 /* ELIMINAR */
-router.delete("/:idMascota", eliminarMascota);
+router.delete("/:idMascota", deletePetController);
 
 module.exports = router;
