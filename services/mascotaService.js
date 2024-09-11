@@ -9,7 +9,9 @@ const getAllPetsService = async (userID) => {
     };
   } else {
     try {
-      const pets = await MascotaModel.findOne({ idOwner: userID });
+      const user = await UsuarioModel.findById(userID);
+      userPetsID = user.mascotas;
+      const pets = await MascotaModel.find({ _id: { $in: userPetsID } });
       return { mascotas: pets, statusCode: 200 };
     } catch (error) {
       return {
@@ -86,19 +88,20 @@ const createPetService = async (userID, petData) => {
         statusCode: 400,
       };
     } else {
-      const newPet = new MascotaModel({
-        nombre: petData.nombre,
-        fechaDeNacimiento: petData.fechaDeNacimiento,
-        especie: petData.especie,
-        raza: petData.raza,
-        color: petData.color,
-        colorDePelo: petData.colorDePelo,
-        pesoKg: petData.pesoKg,
-        esterilizado: petData.esterilizado,
-        domicilio: petData.domicilio,
-        idOwner: user._id,
-      });
       try {
+        const newPet = new MascotaModel({
+          nombre: petData.nombre,
+          fechaDeNacimiento: petData.fechaDeNacimiento,
+          especie: petData.especie,
+          raza: petData.raza,
+          colorDePelo: petData.colorDePelo,
+          pesoKg: petData.pesoKg,
+          esterilizado: petData.esterilizado,
+          domicilio: petData.domicilio,
+          observaciones: petData.observaciones,
+          idOwner: user._id,
+          sexo: petData.sexo,
+        });
         await newPet.save();
         user.mascotas.push(newPet._id);
         user.save();

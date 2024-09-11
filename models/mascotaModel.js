@@ -19,9 +19,13 @@ const MascotaSchema = new Schema({
   },
   especie: {
     type: String,
+    enum: ["felino", "canino", "otro"],
     required: true,
-    minlength: 3,
-    maxlength: 100,
+  },
+  sexo: {
+    type: String,
+    enum: ["hembra", "macho"],
+    required: true,
   },
   raza: {
     type: String,
@@ -46,7 +50,8 @@ const MascotaSchema = new Schema({
     },
   },
   esterilizado: {
-    type: Boolean,
+    type: String,
+    enum: ["true", "false"],
     required: true,
   },
   domicilio: {

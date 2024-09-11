@@ -26,7 +26,15 @@ const crear = async (body) => {
       saltos
     );
     const usuarioRegistrado = await nuevoUsuario.save();
-    return usuarioRegistrado;
+
+    const payload = {
+      _id: nuevoUsuario._id,
+      rol: "user",
+    };
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET);
+
+    return { usuarioRegistrado, token: token, rol: "user" };
   } catch (error) {
     console.error("Error al registrar usuario:", error);
     return {
@@ -62,6 +70,7 @@ const login = async (body) => {
     return {
       mensaje: `Bienvenid@ ${usuario.nombre} ${usuario.apellido}`,
       token,
+      rol: usuario.rol,
     };
   } else {
     return {
