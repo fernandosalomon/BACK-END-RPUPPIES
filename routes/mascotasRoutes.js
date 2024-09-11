@@ -13,10 +13,8 @@ const {
 const router = express.Router();
 
 /* TRAER TODOS */
-router.get("/all/", getAllPetsAdminController);
 router.get("/", getAllPetsController);
-
-/* TRAE UNA MASCOTA */
+router.get("/all/", getAllPetsAdminController);
 router.get("/:idMascota", getPetController);
 
 /* CREAR MASCOTA */
