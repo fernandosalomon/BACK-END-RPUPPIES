@@ -6,6 +6,7 @@ const {
   deletePetService,
 } = require("../services/mascotaService");
 
+
 const getAllPetsController = async (req, res) => {
   const result = await getAllPetsService(req.params.idUsuario);
   if (result.statusCode === 200) {
@@ -68,3 +69,4 @@ module.exports = {
   deletePetController,
   updatePetController,
 };
+
