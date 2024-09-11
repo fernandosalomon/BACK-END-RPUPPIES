@@ -13,9 +13,9 @@ const {
 const router = express.Router();
 
 /* TRAER TODOS */
+router.get("/all/", getAllPetsAdminController);
 router.get("/:idMascota", getPetController);
 router.get("/", getAllPetsController);
-router.get("/all/", getAllPetsAdminController);
 
 /* CREAR MASCOTA */
 router.post("/", createPetController);
